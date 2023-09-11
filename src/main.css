@@ -1,0 +1,18 @@
+@font-face {
+  font-family: retro;
+  src: url('assets/Retro_Gaming.ttf');
+}
+
+* {
+  font-family: 'retro', Arial, Helvetica, sans-serif;
+}
+
+body {
+  background-image: url('assets/new-pokemon-background.png');
+  background-repeat: no-repeat;
+  background-size: cover, contain;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 98vh;
+}
