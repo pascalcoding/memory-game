@@ -1,20 +1,31 @@
-import { useState } from 'react';
 import './card.css';
 
-function Card({ pokemonName, img }) {
-  const [isClicked, setIsClicked] = useState(false);
-
+function Card({
+  id,
+  pokemonName,
+  img,
+  shuffleCards,
+  incrementCount,
+  resetCount,
+  setIsClicked,
+  resetCardStates,
+  getIsClicked,
+}) {
   const handleClick = () => {
-    setIsClicked(true);
+    if (getIsClicked(id)) {
+      resetCount();
+      resetCardStates();
+    } else {
+      incrementCount();
+      setIsClicked(id, true);
+    }
+    shuffleCards();
   };
 
   return (
     <div className="card" onClick={handleClick}>
       <img src={img} alt={pokemonName} />
-      <p>
-        {pokemonName[0].toUpperCase() +
-          pokemonName.slice(1, pokemonName.length)}
-      </p>
+      <p>{pokemonName[0].toUpperCase() + pokemonName.slice(1)}</p>
     </div>
   );
 }

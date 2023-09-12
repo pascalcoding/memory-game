@@ -16,8 +16,47 @@ const pokemons = [
   'meowth',
 ];
 
-function Grid() {
+function Grid({ incrementCount, resetCount }) {
   const [pokemonData, setPokemonData] = useState([]);
+  const [cardStates, setCardStates] = useState([]);
+
+  const setIsClicked = (id, isClicked) => {
+    const newCards = cardStates.map((card) => {
+      if (id === card.id) {
+        return { id: card.id, isClicked: isClicked };
+      } else {
+        return card;
+      }
+    });
+    setCardStates(newCards);
+  };
+
+  const resetCardStates = () => {
+    const newCards = cardStates.map((card) => {
+      return { id: card.id, isClicked: false };
+    });
+    setCardStates(newCards);
+  };
+
+  const getIsClicked = (id) => {
+    for (let i = 0; i < cardStates.length; i++) {
+      if (cardStates[i].id === id) {
+        return cardStates[i].isClicked;
+      }
+    }
+  };
+
+  const shuffleCards = () => {
+    const newPokemonData = [...pokemonData];
+    for (let i = newPokemonData.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [newPokemonData[i], newPokemonData[j]] = [
+        newPokemonData[j],
+        newPokemonData[i],
+      ];
+    }
+    setPokemonData(newPokemonData);
+  };
 
   useEffect(() => {
     async function fetchPokemonData() {
@@ -28,11 +67,13 @@ function Grid() {
         );
         const data = await response.json();
         newData.push({
+          id: uuid(),
           pokemonName: pokemons[i],
           img: data.sprites.front_default,
         });
       }
       setPokemonData(newData);
+      setCardStates(newData.map((card) => ({ id: card.id, isClicked: false })));
     }
     fetchPokemonData();
   }, []);
@@ -42,14 +83,36 @@ function Grid() {
       <div className="row">
         {pokemonData.slice(0, 5).map((data) => {
           return (
-            <Card key={uuid()} pokemonName={data.pokemonName} img={data.img} />
+            <Card
+              key={data.id}
+              id={data.id}
+              pokemonName={data.pokemonName}
+              img={data.img}
+              shuffleCards={shuffleCards}
+              incrementCount={incrementCount}
+              resetCount={resetCount}
+              setIsClicked={setIsClicked}
+              resetCardStates={resetCardStates}
+              getIsClicked={getIsClicked}
+            />
           );
         })}
       </div>
       <div className="row">
         {pokemonData.slice(5, 10).map((data) => {
           return (
-            <Card key={uuid()} pokemonName={data.pokemonName} img={data.img} />
+            <Card
+              key={data.id}
+              id={data.id}
+              pokemonName={data.pokemonName}
+              img={data.img}
+              shuffleCards={shuffleCards}
+              incrementCount={incrementCount}
+              resetCount={resetCount}
+              setIsClicked={setIsClicked}
+              resetCardStates={resetCardStates}
+              getIsClicked={getIsClicked}
+            />
           );
         })}
       </div>
